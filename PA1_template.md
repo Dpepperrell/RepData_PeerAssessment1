@@ -66,6 +66,7 @@ ggplot(steps, aes(x = steps)) +
 mean_steps <- mean(steps$steps, na.rm = TRUE)
 median_steps <- median(steps$steps, na.rm = TRUE)
 ```
+The mean is 9354.23 steps per day and the median is 10395 steps per day.
 
 ## Time Series plot of the average number of steps taken in a day
 
@@ -81,6 +82,7 @@ ggplot(interval_pattern, aes(x=interval, y=steps)) +
 
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
+On average, the most active 5-minute interval was that commencing at 2020-02-24 08:35:00 with a mean step count of 206.1698113
 
 ## The 5-minute interval that on average contains the maximum number of steps
 
@@ -148,6 +150,9 @@ ggplot(steps_full, aes(x = steps)) +
 mean_steps_full <- mean(steps_full$steps, na.rm = TRUE)
 median_steps_full <- median(steps_full$steps, na.rm = TRUE)
 ```
+- **mean**: 10766.19
+- **median**: 10766.19
+
 
 ## Any diffeences in activity patterns between weekends and weekdays
 
