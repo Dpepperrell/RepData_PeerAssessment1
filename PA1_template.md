@@ -7,9 +7,7 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 ## Introduction
 It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a [Fitbit](https://www.fitbit.com/home), [Nike Fuelband](https://www.nike.com/us/en_us/c/nikeplus-fuelband), or [Jawbone Up](https://jawbone.com/up). These type of devices are part of the “quantified self” movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. But these data remain under-utilized both because the raw data are hard to obtain and there is a lack of statistical methods and software for processing and interpreting the data.
 
@@ -28,7 +26,8 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 
 ## Load required packages for the project
-```{r, message=FALSE}
+
+```r
 library(knitr)
 library(dplyr)
 library(tidyverse)
@@ -37,14 +36,16 @@ library(ggplot2)
 ```
 
 ## Load data and read csv into a dataframe called activity_data
-```{r}
+
+```r
 unzip("activity.zip")
 activity_data <- read.csv("activity.csv", header = TRUE, sep = ',', colClasses = c("numeric", "character", "integer"))
 ```
 
 
 ## Histogram of total number of steps taken each day
-```{r}
+
+```r
 steps <- activity_data %>%
     filter(!is.na(steps)) %>%
     group_by(date) %>%
@@ -56,15 +57,19 @@ ggplot(steps, aes(x = steps)) +
     labs(title = "Steps Per day", x = "Steps per day", y = "Frequency")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
 
 ## Mean and median of number of steps taken each day
-```{r}
+
+```r
 mean_steps <- mean(steps$steps, na.rm = TRUE)
 median_steps <- median(steps$steps, na.rm = TRUE)
 ```
 
 ## Time Series plot of the average number of steps taken in a day
-```{r}
+
+```r
 interval_pattern <- activity_data %>%
     filter(!is.na(steps)) %>%
     group_by(interval) %>%
@@ -74,20 +79,36 @@ ggplot(interval_pattern, aes(x=interval, y=steps)) +
     geom_line(color = "plum") + labs(title = "Interval Pattern - 5 Minutes")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
 
 ## The 5-minute interval that on average contains the maximum number of steps
-```{r}
+
+```r
 interval_pattern[which.max(interval_pattern$steps),]
 ```
 
+```
+## # A tibble: 1 x 2
+##   interval steps
+##      <int> <dbl>
+## 1      835  206.
+```
+
 ## Calulate how many misingvalues are present in the data
-```{r}
+
+```r
 sum(is.na(activity_data$steps))
+```
+
+```
+## [1] 2304
 ```
 
 
 ## Input missing data
-```{r}
+
+```r
 complete_data <- activity_data
 na <- is.na(complete_data$steps)
 average_interval <- tapply(complete_data$steps, complete_data$interval, mean, na.rm = TRUE, simplify = TRUE)
@@ -95,13 +116,19 @@ complete_data$steps[na] <- average_interval[as.character(complete_data$interval[
 ```
 
 ## Do we have any NAs in the data set check
-```{r}
+
+```r
 sum(is.na(complete_data$steps))
+```
+
+```
+## [1] 0
 ```
 
 
 ## Histogram of the total number of steps taken each day after missing values were imputed
-```{r}
+
+```r
 steps_full <- complete_data %>%
     filter(!is.na(steps)) %>%
     group_by(date) %>%
@@ -112,9 +139,12 @@ ggplot(steps_full, aes(x = steps)) +
     labs(title = "Histogram of Steps per day which includes missing values", x = "Steps per day", y = "Frequency")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+
 
 ## Calculate the mean and median steps with the filled in values
-```{r}
+
+```r
 mean_steps_full <- mean(steps_full$steps, na.rm = TRUE)
 median_steps_full <- median(steps_full$steps, na.rm = TRUE)
 ```
@@ -122,7 +152,8 @@ median_steps_full <- median(steps_full$steps, na.rm = TRUE)
 ## Any diffeences in activity patterns between weekends and weekdays
 
 ## Identify which date is a weekend or weekday
-```{r}
+
+```r
 complete_data$day <- weekdays(as.Date(complete_data$date)) 
 weekday <- c("Monday","Tuesday","Wednesday","Thursday","Friday") 
 weekDayOp <- function(dayofweek) { 
@@ -144,6 +175,8 @@ time_line_plot <- ggplot(interval_full, aes(x=interval, y=steps, color = weekday
     facet_wrap(~weekday, ncol = 1, nrow=2)
 print(time_line_plot)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 
 
